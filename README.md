@@ -1,4 +1,4 @@
 # spacecraft
-Detailed concept of spacecraft prototype
+Concept of autonomous spacecraft
 
 * [Hybrid Thermal–Electrical Energy System for Spacecraft](ENERGY.md)
