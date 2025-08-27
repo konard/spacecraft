@@ -32,13 +32,13 @@ flowchart TD
     L[🔦 Laser / Reentry Heating on Water Jacket] --> W[(Water Thermal Bus)]
 
     W --> HP
-    HP -->|Upgraded Heat| O[(Hot Oil Tank 120–300°C)]
+    HP -->|Upgraded Heat| O[(Hot Oil Tank 120-300°C)]
 
-    O -->|Thermal Input| HE[Heat Engine (Stirling/Brayton)]
+    O -->|Thermal Input| HE[Heat Engine]
     HE -->|Electricity| B
     HE -->|Waste Heat| ENV
 
-    O -->|Optional Electrical Heating| HT[(High-T Store 500–1000+°C)]
+    O -->|Optional Electrical Heating| HT[(High-T Store 500-1000+°C)]
     HT -->|Thermal Input| HE
     HT -->|Direct Heat| M[⚙️ Manufacturing Loads]
 
