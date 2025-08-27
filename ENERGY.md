@@ -23,7 +23,7 @@ The system integrates **solar panels, heat pumps, thermal storage, heat engines,
 ## 2. High-Level Architecture
 
 ### Mermaid System Diagram
-\`\`\`mermaid
+```mermaid
 flowchart TD
     A[☀️ Solar Panels] -->|Electricity| B[Batteries]
     A -->|Cooling Waste Heat| HP[Heat Pump]
@@ -55,7 +55,7 @@ flowchart TD
     style HE fill:#dde5ff,stroke:#3355cc,stroke-width:2px
     style HP fill:#fff9cc,stroke:#aa9900,stroke-width:2px
     style W fill:#e0ffff,stroke:#008888,stroke-width:2px
-\`\`\`
+```
 
 ---
 
