@@ -5,14 +5,14 @@
 
 ## 1. Core Concept
 
-The system integrates **solar panels, heat pumps, thermal storage, heat engines, and batteries** into a closed-loop energy–thermal management cycle.  
+The system integrates **solar panels, heat pumps, thermal storage, heat engines, water thermal bus, and batteries** into a closed-loop energy–thermal management cycle.  
 
 - **Solar panels** → primary electrical source.  
 - **Heat pump** → harvests low-grade heat (solar panel cooling, cabin, avionics, ship water jacket).  
 - **Thermal storage** (oil tank, optional high-temperature store) → buffer and upgrade heat.  
 - **Heat engine** → converts stored heat into electricity when useful.  
-- **Batteries** → central buffer for electrical power.  
-- **Ship water jacket** → multifunctional layer for cooling, heat capture, and emergency/radiator mode.  
+- **Batteries** → central buffer for electrical power, thermally managed via the **water bus** for cooling or preheating.  
+- **Ship water jacket** → multifunctional layer for cooling, heat capture, battery thermal control, and emergency/radiator mode.  
 - **Radiators** → final sink for unrecoverable heat.  
 
 👉 The system is designed to *recycle as much heat as possible* before dumping to space.  
@@ -23,7 +23,7 @@ The system integrates **solar panels, heat pumps, thermal storage, heat engines,
 ## 2. High-Level Architecture
 
 ### Mermaid System Diagram
-```mermaid
+\`\`\`mermaid
 flowchart TD
     A[☀️ Solar Panels] -->|Electricity| B[Batteries]
     A -->|Cooling Waste Heat| HP[Heat Pump]
@@ -32,6 +32,7 @@ flowchart TD
     L[🔦 Laser / Reentry Heating on Water Jacket] --> W[(Water Thermal Bus)]
 
     W --> HP
+    W -->|Thermal Management| B
     HP -->|Upgraded Heat| O[(Hot Oil Tank 120-300°C)]
 
     O -->|Thermal Input| HE[Heat Engine]
@@ -55,7 +56,7 @@ flowchart TD
     style HE fill:#dde5ff,stroke:#3355cc,stroke-width:2px,color:#001133
     style HP fill:#fff9cc,stroke:#aa9900,stroke-width:2px,color:#332200
     style W fill:#e0ffff,stroke:#008888,stroke-width:2px,color:#003333
-```
+\`\`\`
 
 ---
 
@@ -77,6 +78,10 @@ flowchart TD
    - From manufacturing (smelting, processing).  
    - Fed into **high-T store** or back to environment loop.  
 
+5. **Battery Thermal Management**
+   - **Cooling**: Water bus removes heat from batteries during high charge/discharge.  
+   - **Preheating**: Water bus provides mild warming in cold conditions to keep batteries in their optimal operating range.  
+
 ---
 
 ## 4. Outputs from the System
@@ -84,7 +89,7 @@ flowchart TD
 1. **Batteries (Main Output)**
    - Store solar-generated and heat-engine-generated electricity.  
    - Supply all spacecraft systems and manufacturing loads.  
-   - In **best case**, all excess thermal energy ends up as stored electric.  
+   - Operate more efficiently thanks to **thermal conditioning via the water bus**.  
 
 2. **Manufacturing Heat (High-T Direct Use)**
    - Induction, resistive, or plasma melting.  
@@ -103,7 +108,7 @@ flowchart TD
 
 | Layer             | Typical Temp | Function                                           | Medium                  |
 |-------------------|--------------|---------------------------------------------------|-------------------------|
-| **Cold Bus**      | 40–60 °C     | PV cooling, cabin, water jacket, laser/reentry input | Water/Ammonia loops     |
+| **Cold Bus**      | 40–60 °C     | PV cooling, cabin, water jacket, **battery conditioning**, laser/reentry input | Water/Ammonia loops     |
 | **Mid-T Storage** | 120–300 °C   | General process heat, feed to engine              | Thermal oil tank        |
 | **High-T Store**  | 500–1000+ °C | Industrial heat, extended engine power, metal melts | Molten salts, tin, ceramics |
 | **Radiators**     | ≥300 K       | Final waste heat rejection to space               | Heat pipes + radiator fins |
@@ -116,10 +121,12 @@ flowchart TD
   - Store PV surplus as heat (oil or molten salt).  
   - Run heat engine during eclipse to extend battery runtime.  
   - Use heat pump to *harvest + upgrade waste heat*.  
+  - **Battery conditioning:** cooling prevents overheating during peak loads, preheating avoids efficiency loss in cold eclipse conditions.  
 
 - **Defense / Survival**
   - Laser attack → absorbed in water jacket → stored as usable heat.  
   - Reentry → jacket acts as heat sink + shield.  
+  - Water bus ensures **batteries remain safe** under extreme conditions.  
 
 - **Manufacturing**
   - Smelting, alloying, forging (direct electric heating).  
@@ -134,6 +141,7 @@ flowchart TD
 - **Efficiency Boosts**
   - PV cooling by HP → higher PV efficiency.  
   - Radiator area reduction by rejecting hotter HP output.  
+  - Battery efficiency improved via active thermal management.  
 
 ---
 
@@ -142,6 +150,7 @@ flowchart TD
 - **Battery Priority:**  
   - Always fill batteries first with solar electricity.  
   - Only run heat pump if electricity is surplus or cooling required.  
+  - Use water bus to keep batteries in optimal temperature window.  
 
 - **Heat Pump COP Tuning:**  
   - Operate at highest possible COP (low lift).  
@@ -166,6 +175,7 @@ flowchart TD
 
 - **All solar + waste heat collected.**  
 - **Batteries charged first.**  
+- **Battery temperature kept optimal via water bus.**  
 - **Excess heat upgraded and stored in oil/high-T tanks.**  
 - **Heat engine recycles storage heat → extra electricity.**  
 - **Only when every buffer is full** → heat is finally sent to **ship wall radiators**.  
@@ -174,4 +184,5 @@ flowchart TD
 
 ✅ This architecture **recycles nearly every watt of energy twice** (electrical and thermal) before losing it to space.  
 ✅ It’s flexible: works in sun, eclipse, reentry, or even under laser irradiation.  
-✅ It supports both **crew survival** and **industrial manufacturing** on long-duration missions.  
+✅ It supports both **crew survival** and **industrial manufacturing**.  
+✅ **Battery life and efficiency are extended** by integrated thermal management.  
