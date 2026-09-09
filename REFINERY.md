@@ -106,6 +106,9 @@ Each block is a standard unit. Conditions are typical, not limits.
 | Direct air capture, electro-swing | capture charged, release discharged | ambient | quinone electrodes | Pilot | Verdox, Mission Zero |
 | Ilmenite hydrogen reduction | FeTiO3 + H2 → Fe + TiO2 + H2O | 900–1000 °C | none | Lab, lunar target | NASA / ESA ISRU |
 | Molten regolith electrolysis | MeO → Me + ½ O2 | 1600 °C | none | Lab | MIT, NASA |
+| Ram intake with cryotrap | directed gas beam → condensed N2, O2, CO2, H2O | 7–8 km/s, 120–200 km, 20–70 K panel | none | Ground-tested intake, PROFAC study | [ESA / SITAEL RAM-EP](https://www.esa.int/Enabling_Support/Space_Engineering_Technology/World-first_firing_of_air-breathing_electric_thruster) |
+| Aerogel dust capture | hypervelocity grains stopped intact | ≤ 6 km/s, 0.01–0.05 g/cm³ silica aerogel | none | Flown, samples returned | [Stardust](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2003JE002087) |
+| Knudsen compressor | thermal transpiration moves rarefied gas cold → hot | ΔT along narrow channel, no moving parts | none | Lab devices | Vacuum microtechnology |
 | Sulfuric acid decomposition | H2SO4 → H2O + SO3, SO3 → SO2 + ½ O2 | 350–900 °C | Pt / Fe2O3 | Commercial (S-I cycle) | Venus water source |
 
 ---
@@ -456,7 +459,91 @@ flowchart LR
 
 ---
 
-## 11. Scenario matrix
+## 11. Intake: orbital scoop, sampler, and deflector
+
+The hull flies through matter everywhere, but it can only harvest where matter is dense enough to matter. Capturing a particle means stopping it in the ship frame. That costs its momentum as drag, `F = ρ v² A`, and dumps its kinetic energy, `½ v²` per kilogram, as heat. Neither cost depends on the shape of the intake.
+
+| Where | Speed | Density | Into a 10 m² mouth | Verdict |
+|---|---|---|---|---|
+| Earth, 150–180 km | 7.8 km/s | 1e-9 kg/m³ | ~7 kg per day | Build it |
+| Venus, 150 km | 7.2 km/s | 1e-9 kg/m³ | ~6 kg per day of CO2 | Build it |
+| Mars, 120 km | 3.5 km/s | 1e-9 kg/m³ | ~3 kg per day of CO2 | Build it |
+| Enceladus plume | 8 km/s | 1e-9 to 1e-7 kg/m³ | kilograms of water per pass | Build it |
+| Comet coma | 10–50 km/s | 1e-10 kg/m³ | grams to kilograms per pass | Sample only |
+| Solar wind, 1 AU | 400 km/s | 1e-20 kg/m³ | ~1 mg per year | Useless |
+| Interstellar, 0.1 c | 30,000 km/s | 1e-21 kg/m³ | ~10 mg per year | Useless, and a brake |
+
+Kinetic energy per kilogram is 30 MJ at orbital speed, 80 GJ in the solar wind, and 450 TJ at a tenth of light speed. Above roughly 50 km/s incoming atoms bury themselves in the wall as radiation damage instead of stopping on it. The Bussard ramjet failed on exactly these numbers: the scoop's drag exceeds any fusion thrust, which is why the same field is now used backwards as a magnetic sail for braking. The intake below is for atmospheres, plumes, and rings. In cruise it is closed.
+
+### 11.1 Mechanism
+
+```mermaid
+flowchart LR
+    BEAM[Incoming gas and dust<br/>directed beam, 3–8 km/s] --> HC[1. Honeycomb collimator<br/>long narrow ducts]
+    HC --> WW[2. Warm catcher wall<br/>300–500 K, radiator-cooled<br/>takes 30 MJ/kg, O → O2]
+    WW -->|thermalized gas, random directions| CP[3. Cryopanel lining the far leg<br/>20–70 K, sticking > 0.9<br/>N2, O2, CO2, H2O freeze out]
+    HC --> AG[4. Aerogel floor<br/>dust ≤ 6 km/s stopped intact]
+    HC --> WB[Whipple bumper behind honeycomb<br/>for grains > 1 mm]
+    CP -->|periodic warm-up, traps alternate| KC[5. Knudsen compressor<br/>ΔT drives gas, no moving parts]
+    KC --> SEP[Cryogenic separation]
+    SEP -->|N2, Ar| BUF[(Buffer gas)]
+    SEP -->|O2| OT[(O2 tank)]
+    SEP -->|CO2| CT[(CO2 tank)]
+    SEP -->|H2O| WT[(Water tank)]
+    SEP -->|slice of catch| EP[Ion thruster<br/>cancels intake drag]
+    WW -.->|heat to water bus| RAD[🪞 Radiators, ENERGY.md]
+    CP -.->|30 W cold load| CRYO[Cryocooler]
+```
+
+1. **Honeycomb collimator.** A long narrow duct passes a molecule aimed along it with near certainty and passes a random one with a probability of roughly diameter over length. The asymmetry is beam versus thermal, not forward versus backward. This is the ESA and SITAEL intake, tested on the ground in 2017 at simulated 200 km conditions.
+2. **Warm catcher wall.** The beam thermalizes here, at the bend of the U. All of the 30 MJ per kilogram of kinetic energy lands on this wall, which is radiator-cooled and costs nothing to run. Atomic oxygen, which arrives at 5 eV and etches polymers, recombines to O2 on a metal or ceramic surface. Never let the beam hit the cold panel directly: chilling 30 MJ per kilogram to 20 K would need about 100 kW of cryocooler power for a 10 m² mouth.
+3. **Cryopanel.** Lines the far leg and most of the interior. Thermalized molecules leave the warm wall in random directions and stick on the first cold surface they touch. The escape probability per bounce is about mouth area over total interior area, so 10 m² of mouth against 200 m² of cold surface captures above 90 %. The cold load is only the sensible and latent heat of room-temperature gas, about 0.4 MJ per kilogram, or 30 W at 7 kg per day. Hydrogen and helium do not condense at 20 K and need 4 K or a charcoal sorbent, but at scoop altitudes they are a trace.
+4. **Aerogel floor and bumper.** Grains up to a few hundred micrometers at up to 6 km/s stop intact in graded silica aerogel, as Stardust proved in 2004. Anything larger vaporizes on impact and is a shield problem, handled by the honeycomb front acting as a Whipple bumper with the water jacket of [ENERGY.md](ENERGY.md) behind it. Above about 10 km/s dust is not captured by any material.
+5. **Regeneration.** The trap fills as ice. Two traps alternate. A warm-up releases the gas, and a Knudsen compressor, a narrow channel with a hot end and a cold end, drives the rarefied gas toward storage by thermal transpiration with no moving parts. The ship's hot and cold buses supply the temperature difference for free.
+
+### 11.2 Two valve modes
+
+- **Molecular flow, continuous mode.** Above about 120 km the mean free path is tens of meters and molecules never touch each other. The cryopanel is the valve. No shutter is needed, and no passive shape can add anything.
+- **Continuum flow, gulp mode.** During an aerobraking pass or a plume crossing, density is a million times higher and the gas behaves as a fluid. A cryopanel would be overwhelmed. A pressure sensor at the mouth opens a shutter, the duct fills at ram pressure, and the shutter closes before the gas thermalizes and drifts back out. Thermal speed at 300 K is about 500 m/s, so a 5 m duct empties in about 10 ms and the shutter must close faster than that. The batch is then compressed mechanically. This is the mode for Enceladus, comet comas, and periapsis passes.
+
+### 11.3 Why not a Tesla valve
+
+A Tesla valve makes backflow fight the main flow. That needs a fluid, meaning Reynolds numbers in the hundreds. In molecular flow there is no fluid, only single molecules and walls, and any passive channel transmits a thermalized gas equally in both directions. A shape that let random molecules in but not out would be a Maxwell demon and would run a heat engine off nothing. The serpentine would also obstruct the aimed beam, which is the only thing entering easily. Fractal branching of the cold surface is legitimate as an area multiplier for the cryopanel, which lowers the escape probability per bounce. It is not a diode.
+
+### 11.4 Modes by rotating the U
+
+The U is mounted on a turret and used differently depending on what is ahead.
+
+| Mode | Orientation | What it does |
+|---|---|---|
+| Collect | mouth forward, cryopanel cold | Continuous molecular capture in low orbit |
+| Gulp | mouth forward, shutter armed | Batch capture in dense passes and plumes |
+| Sample | mouth forward, aerogel exposed | Intact dust capture below 6 km/s |
+| Shield | rotated 180°, convex back forward | Honeycomb and back wall act as Whipple bumper, water jacket behind |
+| Deflect | mouth angled 30–60° off the velocity vector | Sheds gas and dust sideways during aerobraking to protect panels and radiators |
+| Closed | shutter shut, cryopanel warm | Cruise. Nothing in the path is worth the drag. |
+| Brake | magnetic sail deployed, intake closed | Momentum of the medium slows the ship at arrival |
+
+### 11.5 Budget for a 10 m² mouth at 150–180 km
+
+| Item | Value |
+|---|---|
+| Mass collected | ~7 kg per day |
+| Drag | ~0.6 N |
+| Heat on warm wall | ~2.4 kW |
+| Cold load on cryopanel | ~30 W |
+| Ion thruster power to cancel drag at 3000 s | ~18 kW |
+| Propellant taken from the catch | ~1.7 kg per day |
+| Net stored | ~5 kg per day |
+| Energy per net kilogram | ~90 kWh |
+
+The mass is free but slow. Demetriades' 1959 PROFAC study reached the same conclusion with a 10 MW nuclear unit collecting about 40 g/s. Value comes from years of operation and from delivering oxygen, nitrogen, and CO2 to the refinery tanks without a launch. Everything collected at Earth is buffer gas and oxidizer. Everything collected at Venus or Mars is carbon feedstock for the manifold in section 4.
+
+Precedents: [ESA / SITAEL RAM-EP](https://www.esa.int/Enabling_Support/Space_Engineering_Technology/World-first_firing_of_air-breathing_electric_thruster) intake and air-breathing thruster, [PROFAC](https://en.wikipedia.org/wiki/Propulsive_fluid_accumulator) and the Georgia Tech [PHARO](https://mwalker.gatech.edu/papers/IEEE_AerospaceConference_PHARO_2010.pdf) study, and [Stardust](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2003JE002087) aerogel capture.
+
+---
+
+## 12. Scenario matrix
 
 Which block is active where. ● required, ○ optional, — not applicable.
 
@@ -480,13 +567,14 @@ Which block is active where. ● required, ○ optional, — not applicable.
 | Regenerative H2/O2 fuel cell | — | — | ○ | ● | ○ | ○ |
 | SOFC / oxy-fuel converter | ● | ● | — | ○ | ● | ○ |
 | Cryogenic liquefaction | ○ | ○ | ○ | ● | ● | ○ |
+| Orbital ram intake | — | — | ● in low orbit | — | ● from orbit | ● from orbit |
 | Greenhouse | ○ | ● | ● | ● | ● | ● |
 
 The shared core in every column is the electrolyzer, the water tank, the oxygen tank, the CO2 tank, and the Sabatier and methanol reactors. That is the minimum kit. Everything else is a bolt-on chosen by what the environment supplies.
 
 ---
 
-## 12. Design rules
+## 13. Design rules
 
 1. **Separate separation from fixation.** No single chamber does both. Membranes or sorbents sort gases at low energy; reactors fix them at high energy.
 2. **Take oxygen from the electrolyzer, never from air.** It is already pure and its quantity matches consumption exactly.
@@ -499,22 +587,24 @@ The shared core in every column is the electrolyzer, the water tank, the oxygen 
 9. **Pick the lowest pressure that works.** Sabatier at 5 bar before methanol at 50 bar before MTG at 20 bar plus 380 °C. Mass and safety follow pressure.
 10. **Match the hydrogen ratio to the product.** Methane 4, methanol 3, hydrocarbons 2, solid carbon 2 with full recovery. Size the electrolyzer for the worst branch.
 11. **Treat waste as ore.** Digest what bacteria will eat, gasify the fiber, oxidize the rest. Ash goes to the greenhouse.
-12. **Let the product mix follow price and mission phase.** Sell ammonia when fertilizer is dear, make methane when a launch window approaches, make methanol as a standing reserve.
+12. **Open the intake only where matter is dense.** Low orbit, plumes, rings, and aerobraking passes. In cruise the hull meets radiation and momentum, not feedstock.
+13. **Let the product mix follow price and mission phase.** Sell ammonia when fertilizer is dear, make methane when a launch window approaches, make methanol as a standing reserve.
 
 ---
 
-## 13. Open questions
+## 14. Open questions
 
 - Single-reactor switching: can one Cu/ZnO bed alternate between methanol and DME by temperature alone, or is a second bed always needed?
 - Microgravity Fischer-Tropsch: wax handling without gravity has no demonstrated design.
 - Venus acid harvesting: collection rate per square meter of collector at 50 km is unmeasured.
 - Lunar Bosch carbon: is the solid carbon clean enough to serve as an electrode or reductant without processing?
 - Argon in the Mars buffer gas: does it interfere with Haber-Bosch at the 1 % level, or is a purge enough?
+- Gulp-mode shutter: what closing time is achievable for a 1 m diameter iris, and does it beat the duct emptying time at plume densities?
 - Round-trip target: which converter reaches 60 % on methanol at 100 kW scale, SOFC or reversible SOC?
 
 ---
 
-## 14. Sources
+## 15. Sources
 
 **Earth precedents**
 - Carbon Recycling International, George Olah plant, CO2 to methanol since 2012: https://carbonrecycling.com/projects/george-olah
@@ -534,4 +624,8 @@ The shared core in every column is the electrolyzer, the water tank, the oxygen 
 - NASA OSCAR trash-to-gas, suborbital test: https://ntrs.nasa.gov/citations/20220009118 and https://www.nasa.gov/centers-and-facilities/armstrong/nasa-technology-designed-to-turn-space-trash-into-treasure/
 - MOXIE Mars oxygen ISRU experiment: https://www.science.org/doi/10.1126/sciadv.abp8636 and https://science.nasa.gov/blog/moxie-sets-consecutive-personal-bests-and-mars-records-for-oxygen-production/
 - HAVOC, High Altitude Venus Operational Concept: https://www.nasa.gov/general/havoc/ and https://ntrs.nasa.gov/citations/20160006329
+- ESA / SITAEL air-breathing electric propulsion, intake and thruster ground test: https://www.esa.int/Enabling_Support/Space_Engineering_Technology/World-first_firing_of_air-breathing_electric_thruster and https://electricrocket.org/2019/886.pdf
+- PROFAC, propulsive fluid accumulator, Demetriades 1959: https://en.wikipedia.org/wiki/Propulsive_fluid_accumulator and https://www.osti.gov/biblio/4163348
+- PHARO, propellant harvesting of atmospheric resources in orbit, Georgia Tech 2010: https://mwalker.gatech.edu/papers/IEEE_AerospaceConference_PHARO_2010.pdf
+- Stardust aerogel capture of comet dust at 6 km/s: https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2003JE002087
 - Planetary atmosphere data, NASA fact sheets: https://nssdc.gsfc.nasa.gov/planetary/factsheet/
