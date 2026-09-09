@@ -111,6 +111,8 @@ Each block is a standard unit. Conditions are typical, not limits.
 | Knudsen compressor | thermal transpiration moves rarefied gas cold → hot | ΔT along narrow channel, no moving parts | none | Lab devices | Vacuum microtechnology |
 | Sulfuric acid decomposition | H2SO4 → H2O + SO3, SO3 → SO2 + ½ O2 | 350–900 °C | Pt / Fe2O3 | Commercial (S-I cycle) | Venus water source |
 
+**Heating the reactors.** The original concept used the copper-zinc catalyst bed itself as a resistor, so the reactor heats from inside with no external furnace. This is now a research direction with real results: Wismann et al. showed electrified steam reforming with a resistively heated catalyst in [Science, 2019](https://doi.org/10.1126/science.aaw8775), reaching reaction temperature in minutes with a reactor a hundred times smaller than a fired one. The same idea applies to RWGS, methanol, and Sabatier beds, and it suits intermittent solar power because there is no furnace to keep warm. The thermal buses of [ENERGY.md](ENERGY.md) supply the rest: reactor exotherms into the mid-temperature oil store, solar concentrators into the high-temperature store, and radiators for what is left.
+
 ---
 
 ## 4. Product manifold
@@ -193,6 +195,16 @@ flowchart LR
     RX -.->|exotherm 250 °C| DIST
 ```
 
+**Converter choice.** Feeding pure oxygen makes the exhaust nothing but CO2 and water for every option. An air-breathing cell would dilute the CO2 with nitrogen and force a separation plant.
+
+| Converter | Efficiency | Scale | Notes |
+|---|---|---|---|
+| Direct methanol fuel cell | 20–30 % | watts to kilowatts | Simplest, heavy platinum loading, only for small units |
+| Methanol reformer + PEM fuel cell | 40–45 % | 10 kW to a few MW | Blue World Technologies, Element 1 ship these |
+| Solid oxide fuel cell | 50–60 % | 100 kW to MW | Runs on methanol directly at 700 °C, waste heat regenerates the sorbent |
+| Oxy-fuel engine or turbine | 35–45 % | any | Cheapest, off the shelf, CO2 recirculated as diluent |
+| Reversible solid oxide cell | up to 80 % in fuel mode | 100–500 kW containers | One stack does electrolysis by day and generation by night, Reverion type |
+
 **What it does for the grid.** Absorbs curtailed solar that would otherwise be wasted, returns power on demand, and holds energy for months at no standing loss.
 
 **What it does for CO2.** The loop is carbon-neutral by itself. It becomes carbon-negative only if some product is sold and locked away: methanol into chemicals, polyolefins into durable goods, or solid carbon from a Bosch branch. Every tonne of product exported forces a tonne-equivalent of CO2 makeup drawn from air or from a biogenic source.
@@ -214,6 +226,18 @@ flowchart LR
     GG --> RSOC[Reversible SOFC<br/>Reverion type, 80 %] -->|⚡| GRID[Grid]
     RSOC -->|pure CO2| CT
 ```
+
+**Yield per kilogram of dry food waste, about 45 % carbon**
+
+| Route | Product | Approximate yield |
+|---|---|---|
+| Oxidize to CO2, then Sabatier with H2 | Methane | 0.55 kg |
+| Anaerobic digestion alone | Methane | 0.25 kg, plus CO2 and fiber residue |
+| Digestion plus hydrogen upgrade | Methane | 0.55 kg |
+| Gasify, then Fischer-Tropsch | Diesel | 0.20 kg |
+| Oxidize to CO2, then methanol synthesis | Methanol | 1.1 kg |
+
+Hierarchy: digest first for the energy-rich fraction, gasify the fibrous residue, oxidize only what nothing else will eat. Ash and digestate carry the phosphorus and potassium back to the greenhouse. Human urine adds urea nitrogen to the same stream. A point source at 10 to 40 % CO2, such as a digester, brewery, or cement kiln, costs about one tenth of air capture per kilogram, and because the loop only needs makeup, one small source supplies the whole plant.
 
 Precedent: [BioCat Avedøre](https://www.electrochaea.com/technology/) in Denmark, the Audi e-gas plant, and [Reverion](https://thenextweb.com/news/german-startup-secures-62m-for-carbon-negative-biogas-power-plants) reversible cells that return pure CO2 from biogas.
 
@@ -239,6 +263,14 @@ flowchart LR
 
 Precedent: [Synhelion DAWN](https://synhelion.com/our-plants) in Jülich, operating since 2024 with ceramic thermal storage for 24-hour reactor operation, and the [150 kW PSI solar gasifier](https://pubs.acs.org/doi/10.1021/ef4008399) that processed sludge, tires, and bagasse. Wet waste can bypass drying through hydrothermal gasification at 250 bar.
 
+Problems to design for:
+
+- **Sun goes away.** A gasifier hates thermal cycling. Synhelion keeps the reactor hot overnight with ceramic brick storage. A small unit uses a hybrid electric heater from the batteries for transitions.
+- **Wet feed.** Food waste is 70 to 90 % water. Dry it with low-grade solar or reactor waste heat, or use hydrothermal gasification.
+- **Tars foul the window.** Directly irradiated reactors admit light through quartz. Biomass tars coat it. Indirectly heated opaque cavities are safer.
+- **Concentration.** About 1000 suns for 1000 °C. A 10 m² dish gives about 7 kW at the focus, enough for a few kilograms of dry waste per hour. A heliostat field scales to tonnes per day.
+- **Ash melts.** Potassium and sodium in food-waste ash slag at about 900 °C. Stay under the ash fusion point or design for slag tapping.
+
 ### 5.4 Variant, ammonia branch for fertilizer and carbon-free fuel
 
 Ammonia was removed from the baseline because nitrogen fixation needs 450 °C and 200 bar. It returns when the plant is sited next to farmland or a port, because fixed nitrogen sells at 0.4 to 1.2 USD/kg while nitrogen gas is worth cents.
@@ -257,7 +289,19 @@ flowchart LR
 
 The ammonia branch consumes hydrogen without consuming oxygen, so it is the only branch that creates an oxygen surplus. Argon rides along with nitrogen at 1 % and accumulates in a closed nitrogen loop, so a purge is required.
 
-### 5.5 Alternatives considered and rejected for Earth
+### 5.5 Low-energy gas separation
+
+Separation should run continuously at low power and fill buffer tanks. That decouples it from the solar curve entirely, so the electrolyzer and reactors, the real loads, take the surplus.
+
+- **The floor is not zero.** Unmixing nitrogen from air costs a minimum of about 0.02 kWh per kilogram. Pulling CO2 from air costs at least 0.13 kWh per kilogram. Real equipment uses 5 to 15 times these figures, and almost all of it goes into moving gas, not into the sorbent.
+- **CO2 is the expensive gas.** At 0.04 % you move about 2,500 kilograms of air per kilogram of CO2. Fans dominate direct air capture energy. This is why the closed carbon loop matters: only leaks need makeup.
+- **Passive drivers.** Solar-heated tank expansion, a solar chimney draft, or a wind-driven diaphragm can push air through a membrane with no compressor. Flow and purity are low, but the only active part is a valve. A tall sorbent wall in a windy site removes most of the fan cost.
+- **Vacuum on the permeate side.** A small pump on the oxygen side of a nitrogen membrane needs far less power than pressurizing the whole feed. Membranes at 1 to 2 bar feed with a permeate vacuum run at about 0.15 kWh per cubic meter of nitrogen at 90 to 97 % purity, against 0.2 to 0.4 kWh at 7 to 13 bar.
+- **Temperature swing on waste heat.** Zeolite, metal-organic framework, and solid amine sorbents release CO2 at 80 to 100 °C. The methanol reactor and every converter give off heat in that range.
+- **Carbonate water.** Potassium carbonate solution absorbs CO2 to bicarbonate and releases it with mild heat or vacuum. It is the working version of the original water-bath idea, and it is slow but cheap.
+- **Membrane facts.** Nitrogen and oxygen are nearly the same size, so membranes sort by speed, not size. Argon stays with the nitrogen. CO2 and water leave with the oxygen, so a nitrogen membrane dries and decarbonizes its product for free but cannot supply CO2. The oxygen side is only 30 to 40 % pure.
+
+### 5.6 Alternatives considered and rejected for Earth
 
 | Idea | Why not |
 |---|---|
@@ -266,6 +310,9 @@ The ammonia branch consumes hydrogen without consuming oxygen, so it is the only
 | Selling electrolyzer oxygen | Stoichiometry consumes every kilogram at night. Selling it forces air-breathing converters and loses the pure CO2 exhaust. |
 | Direct methanol fuel cell at scale | 20–30 % efficiency, high platinum loading. Use SOFC, reformer + PEM, or an oxy-fuel engine. |
 | Cryogenic air separation for a small plant | Only economic at large scale and steady load. Membranes and PSA cover makeup streams. |
+| Burning H2 with O2 to remove oxygen from air | Spends the electricity just used to make the hydrogen. Membranes, PSA, or simply not using air oxygen at all. |
+| Electrochemical or plasma ammonia synthesis at low temperature | Lithium-mediated nitrogen reduction reaches useful Faradaic efficiency only in labs at low current density. Plasma routes are research stage. Haber-Bosch is the only method at scale. |
+| Potassium hydroxide direct air capture with a calciner | The calciner runs at 900 °C, the highest energy of all capture routes. Amine, moisture, or electro-swing sorbents on waste heat cost far less. |
 | Reconverting all fuel to power | Round trip 15–25 %. Sell fuel and fertilizer, and reconvert only at price spikes. |
 
 ---
@@ -319,7 +366,7 @@ Food already has two hydrogens per carbon. Gasoline, diesel, and polyethylene ar
 - Heat rejection is the limit, not power. Reactor exotherms need radiator area. Route them through the water bus and heat pump of [ENERGY.md](ENERGY.md) first.
 - Low pressure wins. Sabatier at a few bar flew first. The 50 bar methanol reactor and 20 bar MTG reactor are mass penalties.
 - Fischer-Tropsch is too heavy for a ship. Gasoline through MTG is the practical liquid route.
-- Cryogenic methane and oxygen liquefy at 111 K and 90 K. Deep-space radiative cooling helps.
+- Cryogenic methane and oxygen liquefy at 111 K and 90 K. Liquefaction costs about 1 kWh per kilogram of propellant. Deep-space radiative cooling helps. Rocket-grade oxygen needs drying and catalytic removal of the trace hydrogen that electrolyzers leave in it.
 - Nothing is vented. Methane goes to a tank instead of overboard. Carbon is precious anywhere without an atmosphere.
 - Plants close the loop. Only photosynthesis turns CO2 and water back into food. Everything else here just changes the form of carbon.
 
@@ -402,6 +449,7 @@ flowchart LR
 - Fuel is the dust-storm battery. Methanol or methane in tanks with an SOFC covers weeks of low solar, which no battery mass budget can.
 - Nitrogen exists, so ammonia fertilizer is possible for greenhouses. Argon is a free buffer gas.
 - Polymers are a product. Methanol-to-olefins gives polyethylene for printing parts and for hydrogen-rich radiation shielding.
+- Liquefying the methane and oxygen costs about 1 kWh per kilogram. The Mars night at −60 °C and the thin atmosphere make radiative precooling cheap.
 - Carbon monoxide plus oxygen is a fallback propellant that needs no water at all, at low specific impulse.
 
 ---
@@ -628,4 +676,5 @@ The shared core in every column is the electrolyzer, the water tank, the oxygen 
 - PROFAC, propulsive fluid accumulator, Demetriades 1959: https://en.wikipedia.org/wiki/Propulsive_fluid_accumulator and https://www.osti.gov/biblio/4163348
 - PHARO, propellant harvesting of atmospheric resources in orbit, Georgia Tech 2010: https://mwalker.gatech.edu/papers/IEEE_AerospaceConference_PHARO_2010.pdf
 - Stardust aerogel capture of comet dust at 6 km/s: https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2003JE002087
+- Electrified, resistively heated catalytic reforming, Wismann et al., Science 2019: https://doi.org/10.1126/science.aaw8775 and open manuscript https://backend.orbit.dtu.dk/ws/files/200646638/Revised_manuscript_for_open_access.pdf
 - Planetary atmosphere data, NASA fact sheets: https://nssdc.gsfc.nasa.gov/planetary/factsheet/
